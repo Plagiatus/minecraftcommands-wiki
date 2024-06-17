@@ -2,6 +2,7 @@ remote_theme: just-the-docs/just-the-docs
 plugins:
   - jekyll-default-layout
   - jekyll-relative-links
+markdown: GFM
 relative_links:
   enabled: true
   collections: true
