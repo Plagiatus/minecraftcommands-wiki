@@ -14,3 +14,22 @@ include:
   - CONTRIBUTING.md
   - ISSUE_TEMPLATE.md
   - PULL_REQUEST_TEMPLATE.md
+collections:
+  items:
+    permalink: "/questions/:path"
+    output: true
+    order:
+      - questions/detectitem.md
+      - questions/customitemtag.md
+      - questions/amountitems.md
+
+callouts:
+  note:
+    title: Note
+    color: blue
+  important:
+    title: Important
+    color: yellow
+  caution:
+    title: Caution
+    color: red
