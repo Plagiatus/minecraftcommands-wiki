@@ -1,5 +1,6 @@
-remote_theme: just-the-docs
+theme: just-the-docs
 plugins:
+  - jekyll-default-layout
   - jekyll-relative-links
 relative_links:
   enabled: true
