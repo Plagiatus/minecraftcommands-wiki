@@ -107,7 +107,7 @@ This crafting method consists of two parts: the controller and the recipes.
 
 The controller is a command block that detects the placement of a spawn_egg to install a dropper block, as well as to remove the support entity when the block is destroyed by the player and return a spawn_egg to the player.
 
-<details>
+<details markdown="1">
   <summary style="color: #e67e22; font-weight: bold;">See commands</summary>
 
     # Command blocks (controller) for 1.19.4 - 1.20.4
@@ -134,7 +134,7 @@ Below is a schematic representation of the command to check the recipe:
 
 Now you can create a ready-made command for the recipe. Below is an example of crafting without checking custom NBT tags for compactness, but you can add any NBT data for verification:
 
-<details>
+<details markdown="1">
   <summary style="color: #e67e22; font-weight: bold;">See commands</summary>
 
     # Example recipe
@@ -180,7 +180,7 @@ And when creating all recipe advancements, you use recipe root advancement as th
 
 Below is an example of how to implement this approach:
 
-<details>
+<details markdown="1">
   <summary style="color: #e67e22; font-weight: bold;">See datapck</summary>
 
 ```json
@@ -287,7 +287,7 @@ You can now use this advancement trigger to check the NBT data of the ingredient
 
 Below is an example for creating an advancement for a custom craft, which must have ingredients with NBT data to get the craft result. Only the changes in this version are shown here, the rest of the code is unchanged:
 
-<details>
+<details markdown="1">
   <summary style="color: #e67e22; font-weight: bold;">See datapack</summary>
 	
 ```json	
