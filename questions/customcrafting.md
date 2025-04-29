@@ -19,29 +19,31 @@ The easiest way to create a custom craft is to use floor crafting. You can creat
 Below is a detailed example of creating a floor crafting command.
 
 First, let’s introduce custom ingredients and how much of each ingredient is needed:
+```mcfunction
+# Example custom ingredients
+give @s emerald{some:true,display:{Name:'{"text":"Some Emerald","italic":false}'}}
+give @s diamond{custom:true,display:{Name:'{"text":"Some Diamond","italic":false}'}}
+give @s redstone{data:true,display:{Name:'{"text":"Some Redstone","italic":false}'}}
 
-    # Example custom ingredients
-    give @s emerald{some:true,display:{Name:'{"text":"Some Emerald","italic":false}'}}
-    give @s diamond{custom:true,display:{Name:'{"text":"Some Diamond","italic":false}'}}
-    give @s redstone{data:true,display:{Name:'{"text":"Some Redstone","italic":false}'}}
-
-    Example recipe:
-    2x emerald
-    1x diamond
-    5x redstone
-
+# Example recipe:
+# 2x emerald
+# 1x diamond
+# 5x redstone
+``` 
 It is highly recommended for all custom ingredients in a recipe to use [items with custom tags](/wiki/questions/customitemtag) because the command will be very long anyway, so this is a good way to shorten the command length and make the command easier to read/edit. Also check out the article on how to [detect custom tags](/wiki/questions/detectitem).
 
 Below is the command in pseudocode:
-
-    execute at @a as <first_ingredient> at @s store success entity @s Age short 6000 store success entity <second_ingredient> Age short 6000 store success entity <third_ingredient> Age short 6000 ... run summon <craft_result>
-
+```mcfunction
+execute at @a as <first_ingredient> at @s store success entity @s Age short 6000 store success entity <second_ingredient> Age short 6000 store success entity <third_ingredient> Age short 6000 ... run summon <craft_result>
+```
 For optimization, so as not to check all the items in the world, `<first_ingredient>` should be selected in a small radius around the player, approximately 6 blocks. Next, use the `<first_ingredient>` position for the rest of the command. After you need store the success of the command in the data of this item, the `Age` tag multiplied by 6000 will instantly despawn this item if crafting is successful. All subsequent ingredients must be immediately selected inside the target selector in the `store success entity` subcommand. Be sure to specify for each further ingredient in the target selector `limit=1` and a small `distance`, approximately 0.5 blocks. It might also make sense to add an `OnGround:true` check for each ingredient so that the crafting only works when the items land nearby.
 
 From all this, can now assemble a ready-made command. Here is an example of a simple floor crafting command that will work on versions 1.13 - 1.20.4:
 
-    # Command block / tick function
-    execute at @a as @e[type=item,distance=..6,nbt={OnGround:true,Item:{id:"minecraft:emerald",Count:2b,tag:{some:true}}}] at @s store success entity @s Age short 6000 store success entity @e[type=item,distance=..0.5,limit=1,nbt={OnGround:true,Item:{id:"minecraft:diamond",Count:1b,tag:{custom:true}}}] Age short 6000 store success entity @e[type=item,distance=..0.5,limit=1,nbt={OnGround:true,Item:{id:"minecraft:redstone",Count:5b,tag:{data:true}}}] Age short 6000 run summon item ~ ~ ~ {Item:{id:"minecraft:ender_eye",Count:1b,tag:{custom_result:true,display:{Name:'{"text":"Some Custom Result","italic":false}'}}}}
+```py
+# Command block / tick function
+execute at @a as @e[type=item,distance=..6,nbt={OnGround:true,Item:{id:"minecraft:emerald",Count:2b,tag:{some:true}}}] at @s store success entity @s Age short 6000 store success entity @e[type=item,distance=..0.5,limit=1,nbt={OnGround:true,Item:{id:"minecraft:diamond",Count:1b,tag:{custom:true}}}] Age short 6000 store success entity @e[type=item,distance=..0.5,limit=1,nbt={OnGround:true,Item:{id:"minecraft:redstone",Count:5b,tag:{data:true}}}] Age short 6000 run summon item ~ ~ ~ {Item:{id:"minecraft:ender_eye",Count:1b,tag:{custom_result:true,display:{Name:'{"text":"Some Custom Result","italic":false}'}}}}
+```
 
 **Note:** As you can understand, you can use not only items, but also any entities as a crafting ingredient, just as the result of crafting can be any command executed at this coordinate.
 
@@ -181,6 +183,7 @@ Below is an example of how to implement this approach:
 <details>
   <summary style="color: #e67e22; font-weight: bold;">See datapck</summary>
 
+```json
     # recipe example:some_custom_result (1.15-1.20.4)
     {
       "type": "minecraft:crafting_shaped",
@@ -261,7 +264,8 @@ Below is an example of how to implement this approach:
         ]
       }
     }
-    
+```
+```mcfunction
     # function example:recipe_reset
     advancement revoke @s from example:recipe/root
     clear @s minecraft:knowledge_book
@@ -269,6 +273,7 @@ Below is an example of how to implement this approach:
     recipe take @s example:another_custom_result
     recipe take @s example:more_custom_result
     ...
+```
 
 </details>
 
@@ -284,79 +289,82 @@ Below is an example for creating an advancement for a custom craft, which must h
 
 <details>
   <summary style="color: #e67e22; font-weight: bold;">See datapack</summary>
-    # advancement example:recipe/some_custom_result
-    {
-      "parent": "example:recipe/root",
-      "criteria": {
-        "requirement": {
-          "trigger": "minecraft:recipe_crafted",
-          "conditions": {
-            "recipe_id": "example:some_custom_result",
-            "ingredients": [
-              {
-                "items": [
-                  "minecraft:emerald"
-                ],
-                "nbt": "{some:true}"
-              },
-              {
-                "items": [
-                  "minecraft:emerald"
-                ],
-                "nbt": "{some:true}"
-              },
-              {
-                "items": [
-                  "minecraft:diamond"
-                ],
-                "nbt": "{custom:true}"
-              },
-              {
-                "items": [
-                  "minecraft:redstone"
-                ],
-                "nbt": "{data:true}"
-              },
-              {
-                "items": [
-                  "minecraft:redstone"
-                ],
-                "nbt": "{data:true}"
-              },
-              {
-                "items": [
-                  "minecraft:redstone"
-                ],
-                "nbt": "{data:true}"
-              },
-              {
-                "items": [
-                  "minecraft:redstone"
-                ],
-                "nbt": "{data:true}"
-              },
-              {
-                "items": [
-                  "minecraft:redstone"
-                ],
-                "nbt": "{data:true}"
-              }
-            ]
+	
+```json	
+# advancement example:recipe/some_custom_result
+{
+  "parent": "example:recipe/root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "example:some_custom_result",
+        "ingredients": [
+          {
+            "items": [
+              "minecraft:emerald"
+            ],
+            "nbt": "{some:true}"
+          },
+          {
+            "items": [
+              "minecraft:emerald"
+            ],
+            "nbt": "{some:true}"
+          },
+          {
+            "items": [
+              "minecraft:diamond"
+            ],
+            "nbt": "{custom:true}"
+          },
+          {
+            "items": [
+              "minecraft:redstone"
+            ],
+            "nbt": "{data:true}"
+          },
+          {
+            "items": [
+              "minecraft:redstone"
+            ],
+            "nbt": "{data:true}"
+          },
+          {
+            "items": [
+              "minecraft:redstone"
+            ],
+            "nbt": "{data:true}"
+          },
+          {
+            "items": [
+              "minecraft:redstone"
+            ],
+            "nbt": "{data:true}"
+          },
+          {
+            "items": [
+              "minecraft:redstone"
+            ],
+            "nbt": "{data:true}"
           }
-        }
-      },
-      "rewards": {
-        "function": "example:recipe_reset",
-        "loot": [
-          "example:some_custom_result"
         ]
       }
     }
-    
-    # function example:recipe_reset
-    advancement revoke @s from example:recipe/root
-    clear @s minecraft:knowledge_book
-
+  },
+  "rewards": {
+    "function": "example:recipe_reset",
+    "loot": [
+      "example:some_custom_result"
+    ]
+  }
+}
+```
+```mcfunction
+# function example:recipe_reset
+advancement revoke @s from example:recipe/root
+clear @s minecraft:knowledge_book
+```
 </details>
 
 **Important!** The player can still use regular items in crafting, but then the advancement will not work and the player will only craft the knowledge\_book. To avoid this, you need to create a more complex crafting system.
